@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Цех №9 — ручной детейлинг</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt-0:#0F1214;
+    --asphalt-1:#181C1F;
+    --asphalt-2:#22272B;
+    --steel:#B9C2C8;
+    --steel-dim:#6B7378;
+    --water:#3E93B8;
+    --water-bright:#63B4D8;
+    --amber:#E7A33B;
+    --paper:#F2EFE8;
+    --line: rgba(185,194,200,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--asphalt-0);
+    color:var(--paper);
+    font-family:'Manrope', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3, .display{
+    font-family:'Oswald', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    font-weight:600;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+  @media(max-width:640px){ .wrap{ padding:0 20px; } }
+
+  /* ---------- topbar ticket strip ---------- */
+  .ticket-strip{
+    background:var(--asphalt-1);
+    border-bottom:1px dashed var(--line);
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    color:var(--steel-dim);
+    padding:8px 0;
+  }
+  .ticket-strip .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+  .ticket-strip span{ color:var(--amber); }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,18,20,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:76px;
+  }
+  .logo{ display:flex; align-items:center; gap:12px; }
+  .logo-mark{
+    width:38px; height:38px; border:2px solid var(--amber); border-radius:3px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace; font-weight:700; font-size:15px; color:var(--amber);
+  }
+  .logo-text{ font-family:'Oswald', sans-serif; font-size:19px; font-weight:600; letter-spacing:0.02em; }
+  .logo-text small{ display:block; font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.15em; color:var(--steel-dim); font-weight:400; margin-top:1px; }
+  .nav-links{ display:flex; gap:36px; font-size:14px; color:var(--steel); }
+  .nav-links a{ position:relative; padding:4px 0; transition:color .2s; }
+  .nav-links a:hover{ color:var(--water-bright); }
+  .nav-cta{
+    background:var(--amber); color:var(--asphalt-0); font-weight:700; font-size:13.5px;
+    padding:11px 22px; border-radius:2px; letter-spacing:0.03em; text-transform:uppercase;
+    font-family:'Oswald',sans-serif;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .nav-cta:hover{ transform:translateY(-1px); box-shadow:0 6px 20px rgba(231,163,59,0.25); }
+  .burger{ display:none; }
+  @media(max-width:860px){
+    .nav-links{ display:none; }
+    .burger{ display:block; font-size:22px; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:110px 0 130px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 78% 15%, rgba(62,147,184,0.20), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 15% 90%, rgba(231,163,59,0.08), transparent 60%);
+    pointer-events:none;
+  }
+  .sheen{
+    position:absolute; top:0; left:-40%; width:35%; height:100%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform:skewX(-12deg);
+    animation:sheenmove 7s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes sheenmove{
+    0%{ left:-40%; }
+    50%{ left:120%; }
+    100%{ left:120%; }
+  }
+  .hero-grid{ position:relative; display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:center; }
+  @media(max-width:900px){ .hero-grid{ grid-template-columns:1fr; gap:48px; } }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:0.12em;
+    color:var(--water-bright); text-transform:uppercase; margin-bottom:22px;
+  }
+  .eyebrow::before{ content:""; width:7px; height:7px; background:var(--water-bright); border-radius:50%; box-shadow:0 0 10px var(--water-bright); }
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.02;
+    margin-bottom:24px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--amber); }
+  .hero p.lead{
+    font-size:17.5px; line-height:1.65; color:var(--steel); max-width:480px; margin-bottom:36px;
+  }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:44px; }
+  .btn-primary{
+    background:var(--amber); color:var(--asphalt-0); font-family:'Oswald',sans-serif; font-weight:700;
+    padding:16px 30px; border-radius:2px; font-size:14.5px; letter-spacing:0.03em; text-transform:uppercase;
+    transition:transform .18s ease, box-shadow .18s ease; display:inline-block;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(231,163,59,0.28); }
+  .btn-ghost{
+    border:1px solid var(--line); color:var(--paper); font-family:'Oswald',sans-serif; font-weight:600;
+    padding:15px 28px; border-radius:2px; font-size:14.5px; letter-spacing:0.03em; text-transform:uppercase;
+    transition:border-color .18s, background .18s;
+  }
+  .btn-ghost:hover{ border-color:var(--water-bright); background:rgba(62,147,184,0.08); }
+  .hero-stats{ display:flex; gap:36px; flex-wrap:wrap; }
+  .hero-stats div{ border-left:2px solid var(--amber); padding-left:14px; }
+  .hero-stats .num{ font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--paper); }
+  .hero-stats .lbl{ font-size:12px; color:var(--steel-dim); margin-top:2px; }
+
+  /* car card visual */
+  .car-card{
+    position:relative; background:linear-gradient(160deg, var(--asphalt-2), var(--asphalt-1));
+    border:1px solid var(--line); border-radius:6px; padding:34px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .car-card .tag{
+    position:absolute; top:-14px; right:24px; background:var(--amber); color:var(--asphalt-0);
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; padding:6px 12px; border-radius:2px;
+    transform:rotate(2deg);
+  }
+  .drop-anim{ width:100%; height:180px; position:relative; margin-bottom:20px; border-radius:4px; overflow:hidden;
+    background:linear-gradient(200deg, #1b2d34, #142226); }
+  .droplet{ position:absolute; width:10px; height:14px; background:var(--water-bright); border-radius:50% 50% 50% 0; transform:rotate(45deg); opacity:0.75; animation:fall 3.4s linear infinite; }
+  .droplet:nth-child(2){ left:22%; animation-delay:0.6s; }
+  .droplet:nth-child(3){ left:48%; animation-delay:1.3s; }
+  .droplet:nth-child(4){ left:68%; animation-delay:0.2s; }
+  .droplet:nth-child(5){ left:85%; animation-delay:1.9s; }
+  @keyframes fall{ 0%{ top:-20px; opacity:0; } 12%{ opacity:0.8; } 100%{ top:190px; opacity:0; } }
+  .car-card .cap{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--steel-dim); display:flex; justify-content:space-between; }
+
+  /* ---------- section shared ---------- */
+  section{ padding:100px 0; border-top:1px solid var(--line); }
+  .sec-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:52px; gap:24px; flex-wrap:wrap; }
+  .sec-eyebrow{ font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.12em; color:var(--amber); text-transform:uppercase; margin-bottom:10px; display:block; }
+  .sec-head h2{ font-size:clamp(28px,3.4vw,40px); max-width:560px; }
+  .sec-head p{ color:var(--steel); max-width:340px; font-size:14.5px; line-height:1.6; }
+
+  /* ---------- services as tickets ---------- */
+  .tickets{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  @media(max-width:900px){ .tickets{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:600px){ .tickets{ grid-template-columns:1fr; } }
+  .ticket{
+    position:relative; background:var(--asphalt-1); border:1px solid var(--line); border-radius:4px;
+    padding:26px 24px 24px; transition:border-color .2s, transform .2s;
+  }
+  .ticket:hover{ border-color:var(--water); transform:translateY(-4px); }
+  .ticket::before, .ticket::after{
+    content:""; position:absolute; width:16px; height:16px; background:var(--asphalt-0);
+    border-radius:50%; top:50%; transform:translateY(-50%);
+  }
+  .ticket::before{ left:-9px; }
+  .ticket::after{ right:-9px; }
+  .ticket .num{ font-family:'JetBrains Mono',monospace; color:var(--steel-dim); font-size:12px; margin-bottom:14px; }
+  .ticket h3{ font-size:19px; margin-bottom:10px; text-transform:none; letter-spacing:0; }
+  .ticket p{ font-size:13.5px; color:var(--steel); line-height:1.55; margin-bottom:20px; min-height:60px; }
+  .ticket .perf{ border-top:1px dashed var(--line); margin:0 -24px 16px; }
+  .ticket .price-row{ display:flex; justify-content:space-between; align-items:baseline; }
+  .ticket .price{ font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; color:var(--amber); }
+  .ticket .from{ font-size:11px; color:var(--steel-dim); }
+
+  /* ---------- before/after ---------- */
+  .compare-wrap{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+  @media(max-width:760px){ .compare-wrap{ grid-template-columns:1fr; } }
+  .compare{
+    position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line); height:280px;
+  }
+  .compare .half{ position:absolute; inset:0; display:flex; align-items:flex-end; padding:18px; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; }
+  .compare .before{ background:linear-gradient(160deg,#2b2620,#1c1a17); width:52%; color:var(--steel-dim); }
+  .compare .after{ position:absolute; top:0; right:0; bottom:0; width:48%; background:linear-gradient(160deg,#16323d,#0f2229); color:var(--water-bright); display:flex; align-items:flex-end; padding:18px; }
+  .compare .divider{ position:absolute; top:0; bottom:0; left:52%; width:2px; background:var(--amber); box-shadow:0 0 12px rgba(231,163,59,0.6); }
+
+  /* ---------- process ---------- */
+  .process{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  @media(max-width:820px){ .process{ grid-template-columns:repeat(2,1fr); } }
+  .p-step{ padding:32px 26px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); position:relative; }
+  .p-step:nth-child(4n){ border-right:none; }
+  @media(max-width:820px){ .p-step:nth-child(2n){ border-right:none; } .p-step:nth-child(4n){ border-right:1px solid var(--line); } }
+  .p-step .idx{ font-family:'JetBrains Mono',monospace; color:var(--water-bright); font-size:13px; margin-bottom:14px; }
+  .p-step h3{ font-size:16px; text-transform:none; letter-spacing:0; margin-bottom:8px; }
+  .p-step p{ font-size:13px; color:var(--steel); line-height:1.5; }
+
+  /* ---------- testimonials ---------- */
+  .testi-wrap{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  @media(max-width:900px){ .testi-wrap{ grid-template-columns:1fr; } }
+  .testi{ background:var(--asphalt-1); border:1px solid var(--line); border-radius:6px; padding:26px; }
+  .testi .stars{ color:var(--amber); letter-spacing:2px; margin-bottom:14px; font-size:14px; }
+  .testi p{ font-size:14px; color:var(--steel); line-height:1.6; margin-bottom:18px; }
+  .testi .who{ display:flex; align-items:center; gap:10px; }
+  .testi .avatar{ width:34px; height:34px; border-radius:50%; background:linear-gradient(140deg,var(--water),var(--amber)); flex-shrink:0; }
+  .testi .name{ font-size:13.5px; font-weight:700; }
+  .testi .car{ font-size:11.5px; color:var(--steel-dim); font-family:'JetBrains Mono',monospace; }
+
+  /* ---------- booking ---------- */
+  .booking{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+  @media(max-width:900px){ .booking{ grid-template-columns:1fr; gap:40px; } }
+  .book-info h2{ font-size:clamp(26px,3.2vw,36px); margin-bottom:18px; }
+  .book-info p{ color:var(--steel); font-size:14.5px; line-height:1.7; margin-bottom:28px; max-width:420px; }
+  .contact-line{ display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:14.5px; }
+  .contact-line .ic{ width:34px; height:34px; border:1px solid var(--line); border-radius:4px; display:flex; align-items:center; justify-content:center; color:var(--water-bright); font-family:'JetBrains Mono',monospace; font-size:13px; flex-shrink:0; }
+
+  form{ background:var(--asphalt-1); border:1px solid var(--line); border-radius:6px; padding:32px; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--steel-dim); margin-bottom:8px; }
+  .field input, .field select{
+    width:100%; background:var(--asphalt-0); border:1px solid var(--line); border-radius:3px; padding:13px 14px;
+    color:var(--paper); font-family:'Manrope',sans-serif; font-size:14.5px; outline:none; transition:border-color .18s;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--water-bright); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:480px){ .field-row{ grid-template-columns:1fr; } }
+  form .submit{
+    width:100%; background:var(--amber); color:var(--asphalt-0); border:none; padding:16px; border-radius:3px;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:14.5px; letter-spacing:0.03em; text-transform:uppercase;
+    cursor:pointer; transition:transform .18s, box-shadow .18s; margin-top:6px;
+  }
+  form .submit:hover{ transform:translateY(-1px); box-shadow:0 10px 24px rgba(231,163,59,0.25); }
+  .form-note{ font-size:11.5px; color:var(--steel-dim); margin-top:12px; text-align:center; }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:44px 0 30px; }
+  .foot-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .foot-grid .copy{ font-size:12.5px; color:var(--steel-dim); font-family:'JetBrains Mono',monospace; }
+  .foot-links{ display:flex; gap:22px; font-size:13px; color:var(--steel); }
+
+  ::selection{ background:var(--amber); color:var(--asphalt-0); }
+  @media (prefers-reduced-motion: reduce){
+    .sheen, .droplet{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="ticket-strip">
+    <div class="wrap">
+      <span>УЧАСТОК №9 · ЦЕНТРАЛЬНЫЙ ГАРАЖНЫЙ КОМПЛЕКС</span>
+      <span>ПН–ВС · 08:00–22:00 · <span>ЗАПИСЬ ОБЯЗАТЕЛЬНА</span></span>
+    </div>
+  </div>
+
+  <header>
+    <nav class="wrap">
+      <div class="logo">
+        <div class="logo-mark">9</div>
+        <div class="logo-text">ЦЕХ №9<small>РУЧНОЙ ДЕТЕЙЛИНГ</small></div>
+      </div>
+      <div class="nav-links">
+        <a href="#services">Услуги</a>
+        <a href="#work">Работы</a>
+        <a href="#process">Процесс</a>
+        <a href="#booking">Отзывы</a>
+      </div>
+      <a href="#booking" class="nav-cta">Записаться</a>
+    </nav>
+  </header>
+
+  <section class="hero" style="border-top:none;">
+    <div class="sheen"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Приём по записи · 3 поста</span>
+        <h1>Машина выходит <em>чище</em>,<br>чем с завода</h1>
+        <p class="lead">Ручная мойка, химчистка и полировка кузова без конвейера и очередей. Каждую машину моет один и тот же мастер — от начала до конца.</p>
+        <div class="hero-actions">
+          <a href="#booking" class="btn-primary">Записаться на мойку</a>
+          <a href="#services" class="btn-ghost">Смотреть цены</a>
+        </div>
+        <div class="hero-stats">
+          <div><div class="num">2 400+</div><div class="lbl">машин за 2025 год</div></div>
+          <div><div class="num">40 мин</div><div class="lbl">средний экспресс-цикл</div></div>
+          <div><div class="num">4.9</div><div class="lbl">рейтинг постоянных клиентов</div></div>
+        </div>
+      </div>
+      <div class="car-card">
+        <div class="tag">ПОСТ СВОБОДЕН</div>
+        <div class="drop-anim">
+          <div class="droplet"></div><div class="droplet"></div><div class="droplet"></div><div class="droplet"></div><div class="droplet"></div>
+        </div>
+        <div class="cap"><span>ТЕКУЩАЯ ЗАГРУЗКА</span><span>2 / 3 ПОСТА</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="sec-eyebrow">Прайс-лист</span>
+          <h2>Услуги и стоимость</h2>
+        </div>
+        <p>Фиксированные цены без "от" в маркетинговом смысле — итоговый чек озвучиваем до начала работ.</p>
+      </div>
+      <div class="tickets">
+        <div class="ticket">
+          <div class="num">УСЛ. 01</div>
+          <h3>Экспресс-мойка кузова</h3>
+          <p>Бесконтактная мойка + ручная досушка микрофиброй, чернение резины.</p>
+          <div class="perf"></div>
+          <div class="price-row"><span class="price">800 ₽</span><span class="from">15–20 мин</span></div>
+        </div>
+        <div class="ticket">
+          <div class="num">УСЛ. 02</div>
+          <h3>Комплексная мойка</h3>
+          <p>Кузов + пороги + диски + арки, пылесос салона, чистка стёкол внутри и снаружи.</p>
+          <div class="perf"></div>
+          <div class="price-row"><span class="price">1 800 ₽</span><span class="from">40–50 мин</span></div>
+        </div>
+        <div class="ticket">
+          <div class="num">УСЛ. 03</div>
+          <h3>Химчистка салона</h3>
+          <p>Экстракторная чистка сидений, ковров и потолка, обработка пластика.</p>
+          <div class="perf"></div>
+          <div class="price-row"><span class="price">6 500 ₽</span><span class="from">3–4 часа</span></div>
+        </div>
+        <div class="ticket">
+          <div class="num">УСЛ. 04</div>
+          <h3>Полировка кузова</h3>
+          <p>Удаление паутинки и мелких царапин, восстановление глубины цвета.</p>
+          <div class="perf"></div>
+          <div class="price-row"><span class="price">от 9 000 ₽</span><span class="from">4–6 часов</span></div>
+        </div>
+        <div class="ticket">
+          <div class="num">УСЛ. 05</div>
+          <h3>Керамика / жидкое стекло</h3>
+          <p>Защитное покрытие на 12–18 месяцев, эффект "мокрого" глянца.</p>
+          <div class="perf"></div>
+          <div class="price-row"><span class="price">от 15 000 ₽</span><span class="from">1 день</span></div>
+        </div>
+        <div class="ticket">
+          <div class="num">УСЛ. 06</div>
+          <h3>Мойка двигателя</h3>
+          <p>Обезжиривание и мойка подкапотного пространства с защитой электрики.</p>
+          <div class="perf"></div>
+          <div class="price-row"><span class="price">1 200 ₽</span><span class="from">25 мин</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="sec-eyebrow">Портфолио</span>
+          <h2>До и после</h2>
+        </div>
+        <p>Реальные результаты полировки и химчистки — фото заменены на макет для демонстрации структуры блока.</p>
+      </div>
+      <div class="compare-wrap">
+        <div class="compare">
+          <div class="half before">До</div>
+          <div class="after">После</div>
+          <div class="divider"></div>
+        </div>
+        <div class="compare">
+          <div class="half before">До</div>
+          <div class="after">После</div>
+          <div class="divider"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="sec-eyebrow">Как это устроено</span>
+          <h2>Путь машины по цеху</h2>
+        </div>
+        <p>Без параллельного обслуживания — один мастер ведёт машину полностью.</p>
+      </div>
+      <div class="process">
+        <div class="p-step">
+          <div class="idx">01 / ПРИЁМ</div>
+          <h3>Осмотр и заявка</h3>
+          <p>Фиксируем состояние кузова, салона и пожелания клиента перед началом работ.</p>
+        </div>
+        <div class="p-step">
+          <div class="idx">02 / МОЙКА</div>
+          <h3>Ручная обработка</h3>
+          <p>Двухведёрный метод, безопасные составы, без царапин на лакокрасочном покрытии.</p>
+        </div>
+        <div class="p-step">
+          <div class="idx">03 / КОНТРОЛЬ</div>
+          <h3>Приёмка мастером</h3>
+          <p>Проверяем результат при дневном свете, устраняем недочёты на месте.</p>
+        </div>
+        <div class="p-step">
+          <div class="idx">04 / ВЫДАЧА</div>
+          <h3>Передача клиенту</h3>
+          <p>Совместный осмотр, рекомендации по уходу до следующего визита.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="sec-eyebrow">Отзывы</span>
+          <h2>Что говорят клиенты</h2>
+        </div>
+        <p>Отзывы владельцев, приезжающих на постоянной основе.</p>
+      </div>
+      <div class="testi-wrap">
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <p>Записываюсь сюда уже год — всегда один и тот же результат, без сюрпризов. Салон после химчистки как новый.</p>
+          <div class="who"><div class="avatar"></div><div><div class="name">Игорь М.</div><div class="car">Skoda Octavia</div></div></div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <p>Делали керамику — прошло больше года, вода до сих пор скатывается каплями. Стоило своих денег.</p>
+          <div class="who"><div class="avatar"></div><div><div class="name">Анна В.</div><div class="car">Kia Sportage</div></div></div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <p>Полировка убрала паутинку, о которой я уже забыл переживать. Кузов будто перекрасили.</p>
+          <div class="who"><div class="avatar"></div><div><div class="name">Дмитрий К.</div><div class="car">BMW 3 series</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <div class="wrap booking">
+      <div class="book-info">
+        <span class="sec-eyebrow">Запись</span>
+        <h2>Забронировать пост</h2>
+        <p>Оставьте заявку — перезвоним в течение 15 минут и подберём удобное время на ближайшие сутки.</p>
+        <div class="contact-line"><div class="ic">☎</div> +7 (900) 123-45-67</div>
+        <div class="contact-line"><div class="ic">✉</div> record@detailing9.ru</div>
+        <div class="contact-line"><div class="ic">⚑</div> ул. Промышленная, 9, бокс 3</div>
+      </div>
+      <form onsubmit="event.preventDefault(); alert('Заявка отправлена (демо-форма макета)');">
+        <div class="field-row">
+          <div class="field"><label>Имя</label><input type="text" placeholder="Как к вам обращаться" required></div>
+          <div class="field"><label>Телефон</label><input type="tel" placeholder="+7 900 000-00-00" required></div>
+        </div>
+        <div class="field">
+          <label>Услуга</label>
+          <select required>
+            <option value="">Выберите услугу</option>
+            <option>Экспресс-мойка — 800 ₽</option>
+            <option>Комплексная мойка — 1 800 ₽</option>
+            <option>Химчистка салона — 6 500 ₽</option>
+            <option>Полировка кузова — от 9 000 ₽</option>
+            <option>Керамика — от 15 000 ₽</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Удобное время</label>
+          <input type="text" placeholder="Например: сегодня после 18:00">
+        </div>
+        <button class="submit" type="submit">Отправить заявку</button>
+        <div class="form-note">Демо-форма для портфолио — данные никуда не отправляются</div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div class="copy">ЦЕХ №9 © 2026 · МАКЕТ ДЛЯ ПОРТФОЛИО</div>
+      <div class="foot-links">
+        <a href="#services">Услуги</a>
+        <a href="#work">Работы</a>
+        <a href="#booking">Контакты</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
